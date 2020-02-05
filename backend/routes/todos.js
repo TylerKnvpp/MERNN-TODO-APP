@@ -36,7 +36,11 @@ router.route("/incomplete").get((req, res) => {
 router.route("/:id").get((req, res) => {
   let id = req.params.id;
   Todo.findById(id, (err, todo) => {
-    res.json(todo);
+    if (todo) {
+      res.json(todo);
+    } else {
+      res.json(err);
+    }
   });
 });
 
@@ -66,10 +70,10 @@ router.route("/update/:id").post(function(req, res) {
     todo
       .save()
       .then(todo => {
-        res.json("Task Completed!");
+        res.json("Task Updated!");
       })
       .catch(err => {
-        res.status(400).send("Update not possible");
+        res.status(400).send("Cannot update task");
       });
   });
 });

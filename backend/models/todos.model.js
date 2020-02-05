@@ -7,7 +7,8 @@ let Todo = new Schema(
       type: String
     },
     todo_responsible: {
-      type: String
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
     },
     todo_priority: {
       type: String

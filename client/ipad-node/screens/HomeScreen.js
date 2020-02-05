@@ -6,13 +6,30 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  AsyncStorage
 } from "react-native";
 import Task from "../components/Task";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen({ navigation }) {
   const [tasksCollection, setTasks] = useState([]);
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    const _retrieveData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("userToken");
+        if (value !== null) {
+          // We have data!!
+        }
+      } catch (error) {
+        // Error retrieving data
+      }
+    };
+
+    _retrieveData();
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:4000/todos/incomplete")
@@ -98,8 +115,13 @@ HomeScreen.navigationOptions = ({ navigation }) => ({
   headerTintColor: "rgba(255,255,255,0.8)",
 
   headerRightContainerStyle: {
-    paddingRight: 10
+    marginRight: 10
   },
+
+  headerLeftContainerStyle: {
+    marginLeft: 10
+  },
+
   headerRight: (
     <TouchableOpacity
       onPress={() => {
@@ -110,7 +132,18 @@ HomeScreen.navigationOptions = ({ navigation }) => ({
         });
       }}
     >
-      <Ionicons name="ios-add" size={30} color="black" left={50} />
+      <Ionicons name="ios-add" size={30} color="black" left={20} />
+    </TouchableOpacity>
+  ),
+  headerLeft: (
+    <TouchableOpacity
+      right={50}
+      onPress={() => {
+        AsyncStorage.clear();
+        navigation.navigate("AuthLoading");
+      }}
+    >
+      <Text>Logout</Text>
     </TouchableOpacity>
   )
 });
